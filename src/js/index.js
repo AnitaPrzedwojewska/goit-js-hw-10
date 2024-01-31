@@ -16,6 +16,7 @@ fetchBreeds()
       ({ id, name }) => `<option value="${id}">${name}</option>`).join('');
   })
   .then(options => {
+    options = `<option value="">-- Select breed of cat --</option>${options}`;
     selectElement.insertAdjacentHTML('beforeend', options);
   })
   .catch(error => {
@@ -29,14 +30,13 @@ selectElement.addEventListener('change', event => {
     .then((catInfo) => {
       console.log(catInfo);
       catInfoElement.textContent = '';
-      const contentCatInfo =
-        `<div class="cat__img">
+      const contentCatInfo = `<div class="cat-img">
         <img src="${catInfo.imgUrl}" >
       </div>
-      <div class="cat__description">
-        <h1>${catInfo.name}</h1>
-        <p>${catInfo.description}</p>
-        <p>${catInfo.temperament}</p>
+      <div class="cat-text">
+        <h2 class="breed-name">${catInfo.name}</h2>
+        <p class="breed-description">${catInfo.description}</p>
+        <p class="breed-temperament"><b>Temperament:</b><br>${catInfo.temperament}</p>
       </div>
       `;
       catInfoElement.insertAdjacentHTML('beforeend', contentCatInfo);

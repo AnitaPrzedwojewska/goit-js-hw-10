@@ -14,7 +14,89 @@ body {
   margin: auto;
 }
 
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 5vh 2vw;
+}
+
+.title {
+  margin-bottom: 2vw;
+  text-align: center;
+}
+
+.breed-select {
+  display: block;
+  margin: auto;
+}
+
 .cat-info {
   display: flex;
+  flex-direction: column;
+}
 
+.cat-img {
+  max-width: 100%;
+  padding: 2vh 0;
+}
+
+.cat-img > img {
+  width: 100%;
+}
+
+.cat-text {
+  padding: 2vh 2vw;
+}
+
+.breed-name {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.breed-description {
+  display: block;
+  margin-bottom: 24px;
+}
+
+.breed-temperament {
+  display: block;
+}
+
+@media screen and (min-width: 480px) {
+  .container {
+    max-width: 480px;
+  }
+  .cat-text {
+  padding: 2vh 0;
+}
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+      max-width: 768px;
+  }
+  .cat-info {
+    flex-direction: row;
+  }
+  .cat-img {
+    max-width: 50%;
+    padding: 0 2vw;
+  }
+  .cat-text {
+    max-width: 50%;
+    padding: 0 2vw;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+  }
+  .cat-img {
+    max-width: 30%;
+  }
+  .cat-text {
+    max-width: 70%;
+  }
 }
