@@ -1,14 +1,25 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
-// import SlimSelect from 'slim-select';
 
-// new SlimSelect({
-//   select: '#selectElement',
-// })
-
-const selectElement = document.querySelector('.breed-select');
 const loadingElement = document.querySelector('.loader');
 const errorElement = document.querySelector('.error');
-const catInfoElement = document.querySelector(".cat-info");
+const catInfoElement = document.querySelector('.cat-info');
+const selectElement = document.querySelector('.breed-select');
+
+// działa, ale niżej próba z biblioteką slim-select
+// fetchBreeds()
+//   .then(breeds => {
+//     return breeds.map(
+//       ({ id, name }) => `<option value="${id}">${name}</option>`).join('');
+//   })
+//   .then(options => {
+//     options = `<option value="">-- Select breed of cat --</option>${options}`;
+//     selectElement.insertAdjacentHTML('beforeend', options);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+
+import SlimSelect from 'slim-select';
 
 fetchBreeds()
   .then(breeds => {
@@ -18,6 +29,15 @@ fetchBreeds()
   .then(options => {
     options = `<option value="">-- Select breed of cat --</option>${options}`;
     selectElement.insertAdjacentHTML('beforeend', options);
+  })
+  .then(() => {
+    new SlimSelect({
+      select: '#selectElement',
+      settings: {
+        placeholderText: '-- Select breed of cat --',
+        contentLocation: document.getElementById('selectLocation'),
+      },
+    });
   })
   .catch(error => {
     console.log(error);
