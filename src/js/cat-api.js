@@ -16,15 +16,15 @@ export const fetchBreeds = () => {
 };
 
 export const fetchCatByBreed = breedId => {
-  console.log("breedId: ", breedId);
+  console.log('breedId: ', breedId);
   const urlBreedInfo = `https://api.thecatapi.com/v1/images/search?api_key=${apiKey}&breed_ids=${breedId}`;
   return axios(urlBreedInfo)
-    .then((response) => {
-      console.log("response: ", response);
-      console.log("response.data[0]: ", response.data[0]);
+    .then(response => {
+      console.log('response: ', response);
+      console.log('response.data[0]: ', response.data[0]);
       return { status: response.status, data: response.data[0] };
     })
-    .catch((error) => {
+    .catch(error => {
       return handleError(error);
     });
 };

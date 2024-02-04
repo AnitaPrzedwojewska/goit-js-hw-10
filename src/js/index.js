@@ -6,12 +6,13 @@ import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 
 const selectElement = document.querySelector('#selectElement');
 const loadingElement = document.querySelector('.loader-container');
+const messageElement = document.querySelector('.message');
 const errorElement = document.querySelector('.error');
 const catInfoElement = document.querySelector('.cat-info');
 
 selectElement.style.display = 'none';
-errorElement.style.color = 'red';
-errorElement.classList.add('visually-hidden');
+loadingElement.style.display = 'block';
+messageElement.style.display = 'none';
 catInfoElement.style.display = 'none';
 
 fetchBreeds()
@@ -20,11 +21,10 @@ fetchBreeds()
     if (response.status !== 200) {
       errorElement.textContent = response.data;
       loadingElement.style.display = 'none';
-      errorElement.style.display = 'block';
+      messageElement.style.display = 'block';
       Notiflix.Notify.warning(response.data);
       return;
     }
-    loadingElement.style.display = 'block';
     console.log('response.data: ', response.data);
     return response.data.map(({ id, name }) => ({ id, name }));
   })
@@ -60,7 +60,7 @@ selectElement.addEventListener('change', event => {
       if (response.status !== 200) {
         errorElement.textContent = response.data;
         loadingElement.style.display = 'none';
-        errorElement.style.display = 'block';
+        messageElement.style.display = 'block';
         Notiflix.Notify.warning(response.data);
         return;
       }
@@ -70,6 +70,8 @@ selectElement.addEventListener('change', event => {
         name: response.data.breeds[0].name,
         description: response.data.breeds[0].description,
         temperament: response.data.breeds[0].temperament,
+        lifespan: response.data.breeds[0].life_span,
+        wikipedia: response.data.breeds[0].wikipedia_url,
         imgUrl: response.data.url,
       };
     })
@@ -82,8 +84,10 @@ selectElement.addEventListener('change', event => {
     </div>
     <div class="cat-text">
       <h2 class="breed-name">${catInfo.name}</h2>
-      <p class="breed-description">${catInfo.description}</p>
-      <p class="breed-temperament"><b>Temperament:</b><br>${catInfo.temperament}</p>
+      <p class="breed-info description">${catInfo.description}</p>
+      <p class="breed-info temperament"><b>Temperament:</b><br>${catInfo.temperament}</p>
+      <p class="breed-info lifespan"><b>Average lifespan:</b><br>${catInfo.lifespan}</p>
+      <p class="breed-info wikipedia"><b>More information:</b><br><a href="${catInfo.wikipedia}">${catInfo.wikipedia}</a></p>
     </div>
     `;
       catInfoElement.insertAdjacentHTML('beforeend', contentCatInfo);

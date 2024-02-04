@@ -151,6 +151,7 @@ body {
 
 .message {
   text-align: center;
+  color: orange;
 }
 
 .cat-info {
@@ -182,13 +183,13 @@ body {
   margin-bottom: 12px;
 }
 
-.breed-description {
+.breed-info {
   display: block;
   margin-bottom: 24px;
 }
 
-.breed-temperament {
-  display: block;
+.breed-info a {
+  color: orange;
 }
 
 @media screen and (min-width: 480px) {
