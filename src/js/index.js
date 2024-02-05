@@ -11,16 +11,21 @@ const messageElement = document.querySelector('.message-container');
 const error = document.querySelector('.message');
 const catInfoElement = document.querySelector('.cat-info');
 
+// const moggieCatInfo = {
+//   name: 'Moggie cat',
+//   description:
+//     "You didn't select any breed of cat. Therefore, information about maggie was displayed. A moggie is a non-pedigree cat of mixed or unknown ancestry. They’re friendly, low maintenance and generally pretty healthy. Most are affectionate and easy going and will fit in with other family pets, including cat-friendly dogs. This makes them ideal pets for families with children and other pets, single households and first-time pet owners. It’s no surprise that they’re the most common cat in the world. ",
+//   temperament:
+//     'unpredictable - some may be shy and clingy, others more independent and adventurous',
+//   lifespan: '15-20',
+//   wikipedia: 'https://en.wikipedia.org/wiki/Domestic_short-haired_cat',
+//   imgUrl: './../images/domestic-cats-1656321647.jpg',
+// };
+
+selectElement.style.display = 'none';
 loadingElement.style.display = 'block';
 messageElement.style.display = 'none';
 catInfoElement.style.display = 'none';
-
-// new SlimSelect({
-//   select: selectElement,
-//   settings: {
-//     placeholderText: '-- Select breed of cat --',
-//   },
-// });
 
 fetchBreeds()
   .then(response => {
@@ -39,6 +44,7 @@ fetchBreeds()
       .map(({ id, name }) => `<option value="${id}">${name}</option>`)
       .join('');
     options = `<option value="" data-placeholder="true"></option>${options}`;
+    selectElement.style.display = 'block';
     selector.insertAdjacentHTML('beforeend', options);
     loadingElement.style.display = 'none';
     new SlimSelect({
@@ -58,7 +64,6 @@ selector.addEventListener('change', event => {
   loadingElement.style.display = 'block';
   messageElement.style.display = 'none';
   const idBreed = event.target.value;
-  // console.log(idBreed);
   fetchCatByBreed(idBreed).then(response => {
     if (response.status !== 200 || response.data === undefined) {
       const message =
@@ -70,7 +75,6 @@ selector.addEventListener('change', event => {
       return;
     }
     loadingElement.style.display = 'block';
-    console.log('response.data: ', response.data);
     const catInfo = {
       name: response.data.breeds[0].name,
       description: response.data.breeds[0].description,
@@ -79,7 +83,7 @@ selector.addEventListener('change', event => {
       wikipedia: response.data.breeds[0].wikipedia_url,
       imgUrl: response.data.url,
     };
-    // console.log('catInfo:', catInfo);
+    catInfo.imgUrl = catInfo.imgUrl ?? './../images/no-photo.png';
     catInfoElement.style.display = 'flex';
     const contentCatInfo = `<div class="cat-img">
           <img src="${catInfo.imgUrl}" alt="${catInfo.name}">

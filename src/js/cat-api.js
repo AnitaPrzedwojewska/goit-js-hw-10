@@ -16,7 +16,6 @@ export const fetchBreeds = () => {
 };
 
 export const fetchCatByBreed = breedId => {
-  // console.log('breedId: ', breedId);
   const urlBreedInfo = `https://api.thecatapi.com/v1/images/search?api_key=${apiKey}&breed_ids=${breedId}`;
   return axios(urlBreedInfo)
     .then(response => {
@@ -31,11 +30,7 @@ export const fetchCatByBreed = breedId => {
 };
 
 const handleError = error => {
-  // debugger;
   if (error.response) {
-    // console.log('error.response: ', error.response);
-    // console.log('error.response.status: ', error.response.status);
-    // console.log('error.response.data: ', error.response.data.message);
     return {
       status: error.response.status,
       data: error.response.data.message,
