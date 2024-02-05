@@ -22,17 +22,9 @@ body {
   text-align: center;
 }
 
-.select-container {
-  width: 100%;
-  margin: 36px auto;
-}
-
-.select-container .breed-select {
-  width: 100%;
-}
-
 .breed-select {
-  display: block;
+  /* display: none; */
+  max-width: 480px;
   margin: auto;
 }
 
