@@ -20,23 +20,15 @@ export const fetchCatByBreed = breedId => {
   const urlBreedInfo = `https://api.thecatapi.com/v1/images/search?api_key=${apiKey}&breed_ids=${breedId}`;
   return axios(urlBreedInfo)
     .then(response => {
-      console.log('response: ', response);
-      console.log('response.data[0]: ', response.data[0]);
-      return { status: response.status, data: response.data[0] };
+      return {
+        status: response.status,
+        data: response.data[0]
+      };
     })
     .catch(error => {
       return handleError(error);
     });
 };
-
-// .then(catObject => {
-//       return {
-//         name: catObject[0].breeds[0].name,
-//         description: catObject[0].breeds[0].description,
-//         temperament: catObject[0].breeds[0].temperament,
-//         imgUrl: catObject[0].url,
-//       };
-//     })
 
 const handleError = error => {
   // debugger;

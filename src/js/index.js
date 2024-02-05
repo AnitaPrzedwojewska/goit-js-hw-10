@@ -18,22 +18,19 @@ catInfoElement.style.display = 'none';
 fetchBreeds()
   .then(response => {
     console.log(response);
-    if (response.status !== 200) {
-      errorElement.textContent = response.data;
+    if (response.status !== 200 || response.data === undefined) {
+      const message =
+        response.data ?? 'Oops! Something went wrong! Try reloading the page!';
+      errorElement.textContent = message;
       loadingElement.style.display = 'none';
       messageElement.style.display = 'block';
-      Notiflix.Notify.warning(response.data);
+      Notiflix.Notify.warning(message);
       return;
     }
-    console.log('response.data: ', response.data);
-    return response.data.map(({ id, name }) => ({ id, name }));
-  })
-  .then(breeds => {
-    return breeds
+    const breeds = response.data.map(({ id, name }) => ({ id, name }));
+    let options = breeds
       .map(({ id, name }) => `<option value="${id}">${name}</option>`)
       .join('');
-  })
-  .then(options => {
     selectElement.style.display = 'block';
     options = `<option value="" data-placeholder="true"></option>${options}`;
     selectElement.insertAdjacentHTML('beforeend', options);
@@ -41,8 +38,7 @@ fetchBreeds()
     new SlimSelect({
       select: '#selectElement',
       settings: {
-        placeholderText: '-- Select breed of cat --',
-        contentLocation: document.getElementById('selectLocation'),
+        placeholderText: '-- Select breed of cat --'
       },
     });
   })
@@ -51,22 +47,27 @@ fetchBreeds()
   });
 
 selectElement.addEventListener('change', event => {
-  // debugger;
+  catInfoElement.textContent = '';
+  catInfoElement.style.display = 'none';
   loadingElement.style.display = 'block';
+  messageElement.style.display = 'none';
   const idBreed = event.target.value;
   console.log(idBreed);
   fetchCatByBreed(idBreed)
     .then(response => {
-      if (response.status !== 200) {
-        errorElement.textContent = response.data;
+      if (response.status !== 200 || response.data === undefined) {
+        const message =
+          response.data ??
+          'Oops! Something went wrong! Try reloading the page!';
+        errorElement.textContent = message;
         loadingElement.style.display = 'none';
         messageElement.style.display = 'block';
-        Notiflix.Notify.warning(response.data);
+        Notiflix.Notify.warning(message);
         return;
       }
       loadingElement.style.display = 'block';
       console.log('response.data: ', response.data);
-      return {
+      const catInfo = {
         name: response.data.breeds[0].name,
         description: response.data.breeds[0].description,
         temperament: response.data.breeds[0].temperament,
@@ -74,23 +75,37 @@ selectElement.addEventListener('change', event => {
         wikipedia: response.data.breeds[0].wikipedia_url,
         imgUrl: response.data.url,
       };
-    })
-    .then(catInfo => {
       console.log('catInfo:', catInfo);
       catInfoElement.style.display = 'flex';
-      catInfoElement.textContent = '';
-      const contentCatInfo = `<div class="cat-img">
-      <img src="${catInfo.imgUrl}" >
-    </div>
-    <div class="cat-text">
-      <h2 class="breed-name">${catInfo.name}</h2>
-      <p class="breed-info description">${catInfo.description}</p>
-      <p class="breed-info temperament"><b>Temperament:</b><br>${catInfo.temperament}</p>
-      <p class="breed-info lifespan"><b>Average lifespan:</b><br>${catInfo.lifespan}</p>
-      <p class="breed-info wikipedia"><b>More information:</b><br><a href="${catInfo.wikipedia}">${catInfo.wikipedia}</a></p>
-    </div>
-    `;
+      const contentCatInfo =
+      `<div class="cat-img">
+          <img src="${catInfo.imgUrl}" >
+        </div>
+        <div class="cat-text">
+          <h2 class="breed-name">${catInfo.name}</h2>
+          <p class="breed-info description">${catInfo.description}</p>
+          <p class="breed-info temperament"><b>Temperament:</b><br>${catInfo.temperament}</p>
+          <p class="breed-info lifespan"><b>Average lifespan:</b><br>${catInfo.lifespan}</p>
+          <p class="breed-info wikipedia"><b>More information:</b><br><a href="${catInfo.wikipedia}">${catInfo.wikipedia}</a></p>
+        </div>`;
       catInfoElement.insertAdjacentHTML('beforeend', contentCatInfo);
       loadingElement.style.display = 'none';
+    // })
+    // .then(catInfo => {
+    //   console.log('catInfo:', catInfo);
+    //   catInfoElement.style.display = 'flex';
+    //   const contentCatInfo = `<div class="cat-img">
+    //   <img src="${catInfo.imgUrl}" >
+    // </div>
+    // <div class="cat-text">
+    //   <h2 class="breed-name">${catInfo.name}</h2>
+    //   <p class="breed-info description">${catInfo.description}</p>
+    //   <p class="breed-info temperament"><b>Temperament:</b><br>${catInfo.temperament}</p>
+    //   <p class="breed-info lifespan"><b>Average lifespan:</b><br>${catInfo.lifespan}</p>
+    //   <p class="breed-info wikipedia"><b>More information:</b><br><a href="${catInfo.wikipedia}">${catInfo.wikipedia}</a></p>
+    // </div>
+    // `;
+    //   catInfoElement.insertAdjacentHTML('beforeend', contentCatInfo);
+    //   loadingElement.style.display = 'none';
     });
 });
