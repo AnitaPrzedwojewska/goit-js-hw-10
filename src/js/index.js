@@ -4,62 +4,66 @@ import Notiflix from 'notiflix';
 
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 
-// const selectElement = document.querySelector('#selectElement');
-const selectElement = document.querySelector('.breed-select');
+const selectElement = document.querySelector('.select-container');
+const selector = document.querySelector('#selectElement');
 const loadingElement = document.querySelector('.loader-container');
-const messageElement = document.querySelector('.message');
-const errorElement = document.querySelector('.error');
+const messageElement = document.querySelector('.message-container');
+const error = document.querySelector('.message');
 const catInfoElement = document.querySelector('.cat-info');
 
-selectElement.style.display = 'none';
 loadingElement.style.display = 'block';
 messageElement.style.display = 'none';
 catInfoElement.style.display = 'none';
 
-fetchBreeds()
-.then(response => {
-  console.log(response);
-  if (response.status !== 200 || response.data === undefined) {
-    const message =
-      response.data ?? 'Oops! Something went wrong! Try reloading the page!';
-    errorElement.textContent = message;
-    loadingElement.style.display = 'none';
-    messageElement.style.display = 'block';
-    Notiflix.Notify.warning(message);
-    return;
-  }
-  const breeds = response.data.map(({ id, name }) => ({ id, name }));
-  let options = breeds
-    .map(({ id, name }) => `<option value="${id}">${name}</option>`)
-    .join('');
-  selectElement.style.display = 'block';
-  options = `<option value="" data-placeholder="true"></option>${options}`;
-  console.log(options);
-  selectElement.insertAdjacentHTML('beforeend', options);
-  loadingElement.style.display = 'none';
-  new SlimSelect({
-    select: selectElement,
-    settings: {
-      placeholderText: '-- Select breed of cat --',
-    },
-  });
-})
-.catch(error => {
-  console.log(error);
-});
+// new SlimSelect({
+//   select: selectElement,
+//   settings: {
+//     placeholderText: '-- Select breed of cat --',
+//   },
+// });
 
-selectElement.addEventListener('change', event => {
+fetchBreeds()
+  .then(response => {
+    // console.log(response);
+    if (response.status !== 200 || response.data === undefined) {
+      const message =
+        response.data ?? 'Oops! Something went wrong! Try reloading the page!';
+      error.textContent = message;
+      loadingElement.style.display = 'none';
+      messageElement.style.display = 'block';
+      Notiflix.Notify.warning(message);
+      return;
+    }
+    const breeds = response.data.map(({ id, name }) => ({ id, name }));
+    let options = breeds
+      .map(({ id, name }) => `<option value="${id}">${name}</option>`)
+      .join('');
+    options = `<option value="" data-placeholder="true"></option>${options}`;
+    selector.insertAdjacentHTML('beforeend', options);
+    loadingElement.style.display = 'none';
+    new SlimSelect({
+      select: '#selectElement',
+      settings: {
+        placeholderText: '-- Select breed of cat --',
+      },
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
+selector.addEventListener('change', event => {
   catInfoElement.textContent = '';
   catInfoElement.style.display = 'none';
   loadingElement.style.display = 'block';
   messageElement.style.display = 'none';
   const idBreed = event.target.value;
-  console.log(idBreed);
+  // console.log(idBreed);
   fetchCatByBreed(idBreed).then(response => {
     if (response.status !== 200 || response.data === undefined) {
       const message =
         response.data ?? 'Oops! Something went wrong! Try reloading the page!';
-      errorElement.textContent = message;
+      error.textContent = message;
       loadingElement.style.display = 'none';
       messageElement.style.display = 'block';
       Notiflix.Notify.warning(message);
@@ -75,10 +79,10 @@ selectElement.addEventListener('change', event => {
       wikipedia: response.data.breeds[0].wikipedia_url,
       imgUrl: response.data.url,
     };
-    console.log('catInfo:', catInfo);
+    // console.log('catInfo:', catInfo);
     catInfoElement.style.display = 'flex';
     const contentCatInfo = `<div class="cat-img">
-          <img src="${catInfo.imgUrl}" >
+          <img src="${catInfo.imgUrl}" alt="${catInfo.name}">
         </div>
         <div class="cat-text">
           <h2 class="breed-name">${catInfo.name}</h2>
